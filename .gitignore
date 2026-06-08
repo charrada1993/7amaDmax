@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+.venv/
+
+# Flask runtime files
+instance/
+*.log
+
+# Uploaded user photos (stored in Firebase, not repo)
+static/uploads/
+
+# Local database (history synced to Firebase)
+history.json
+
+# OS files
+.DS_Store
+Thumbs.db
