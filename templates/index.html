@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7AMA1 — THE 7AMADMAX</title>
+    <!-- Google Fonts: Orbitron (Futuristic/Sci-Fi) and Bangers (Chaotic Comedy) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Intro Splash Screen Video Overlay -->
+    <div id="intro-overlay">
+        <!-- Boot Screen to allow sound autoplay -->
+        <div id="intro-boot-screen">
+            <h1 class="neon-title title-orange">7AMA1 SYSTEM BOOT</h1>
+            <p class="comic-text text-gold" style="margin: 15px 0 25px 0;">Warning: Loud Parody Energy Approaching</p>
+            <button id="boot-btn" class="activate-btn">🔌 LAUNCH 7AMADMAX</button>
+        </div>
+        
+        <!-- Video Container -->
+        <div id="intro-video-container" class="hidden">
+            <video id="intro-video" src="{{ url_for('static', filename='vd/WhatsApp Video 2026-06-07 at 14.36.00.mp4') }}" playsinline></video>
+            <button id="skip-intro-btn" class="sci-fi-btn skip-btn"><span>SKIP INTRO ⏩</span></button>
+        </div>
+    </div>
+
+    <!-- Parallax Starfield Canvas -->
+    <canvas id="starfield"></canvas>
+
+    <!-- Green Full Screen Flash Overlay (For transformation animation) -->
+    <div id="flash-overlay"></div>
+
+    <div class="app-container">
+        <!-- Header Section -->
+        <header class="main-header">
+            <h1 id="main-title" class="neon-title">7AMA1 — THE 7AMADMAX</h1>
+            <p id="main-subtitle" class="neon-subtitle">بطل الكون اللي ما حدا طلبه</p>
+        </header>
+
+        <!-- Main Layout: Left: Mission & Power, Center: 7amaDmax Watch, Right: Upload/Transformation -->
+        <main class="grid-layout">
+            <!-- Left Panel: Funny Dashboard -->
+            <section class="side-panel left-panel">
+                <div class="panel-box mission-box">
+                    <h2>🎯 MISSION OF THE DAY</h2>
+                    <p id="mission-text" class="comic-text">Loading absurd mission from Tunisia...</p>
+                </div>
+                
+                <div class="panel-box stats-box">
+                    <h2>📊 ALIEN POWER LEVEL</h2>
+                    <div class="power-bar-container">
+                        <div id="power-bar" class="power-bar"></div>
+                        <span id="power-text" class="power-text">0%</span>
+                    </div>
+                    <p id="power-status" class="power-status">CALIBRATING 7AMARIA ENERGY...</p>
+                </div>
+
+                <div class="panel-box countdown-box">
+                    <h2>⏳ TRANSFORMATION STATUS</h2>
+                    <div id="timer-display" class="timer-display">READY</div>
+                </div>
+
+                <div class="panel-box archives-btn-box">
+                    <h2>🗄️ MUTATION RECORDS</h2>
+                    <button id="view-archives-btn" class="sci-fi-btn reset-btn" style="margin-top: 0;">
+                        <span>VIEW ARCHIVES</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Center Panel: The 3D 7amaDmax Watch -->
+            <section class="center-panel">
+                <div class="watch-3d-scene">
+                    <div id="watch-container" class="watch-container">
+                        <!-- Bottom Case / Container (Boite) -->
+                        <div class="watch-boite">
+                            <!-- Simulated electronic ports/slots on the sides of the boite -->
+                            <div class="boite-port port-left"></div>
+                            <div class="boite-port port-right"></div>
+                            <div class="boite-port port-back"></div>
+                        </div>
+
+                        <!-- Inner Core containing rotating neon screen and spinning siks -->
+                        <div class="watch-core">
+                            <div class="watch-dial-gradient"></div>
+                            <div class="watch-hologram">
+                                <span class="hologram-siks">🫏</span>
+                            </div>
+                            <!-- Neon scan line across the watch dial -->
+                            <div class="dial-scanline"></div>
+                        </div>
+
+                        <!-- Top Lid (Cage) floating/tilted slightly above -->
+                        <div class="watch-cage">
+                            <div class="cage-rim"></div>
+                            <div class="cage-slot"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="watch-controls">
+                    <button id="activate-btn" class="activate-btn">PRESS TO ACTIVATE</button>
+                </div>
+            </section>
+
+            <!-- Right Panel: Upload & Transformation Result -->
+            <section class="side-panel right-panel">
+                <!-- Upload State -->
+                <div id="upload-panel" class="panel-box form-box">
+                    <h2>📸 Upload Your Ugly Mug to Activate 7amaDmax</h2>
+                    <form id="upload-form" enctype="multipart/form-data">
+                        <div class="form-group file-group">
+                            <label for="image-upload" class="custom-file-upload">
+                                <span>📁 Choose a Masterpiece...</span>
+                                <input type="file" id="image-upload" name="file" accept="image/*" required>
+                            </label>
+                            <span id="file-chosen">No file selected habibi</span>
+                        </div>
+                        
+                        <div class="form-group text-group">
+                            <label for="hero-name">Superhero Name</label>
+                            <input type="text" id="hero-name" name="hero_name" placeholder="E.g. Sidi 7mar..." required>
+                        </div>
+
+                        <div class="form-group text-group">
+                            <label for="hero-bio">Superhero Bio</label>
+                            <textarea id="hero-bio" name="hero_bio" placeholder="Enter your superhero name... or just write anything habibi" rows="3" required></textarea>
+                        </div>
+
+                        <button type="submit" id="submit-btn" class="sci-fi-btn">
+                            <span>ACTIVATE TRANSFORMATION</span>
+                            <div class="sparks-container"></div>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Transformed Result State (Hidden by default, displayed after transformation animation) -->
+                <div id="result-panel" class="panel-box result-box hidden">
+                    <h2>👽 TRANSFORMATION COMPLETE! 👽</h2>
+                    
+                    <div class="alien-display">
+                        <div class="photo-frame-container">
+                            <div class="photo-frame">
+                                <img id="transformed-photo" src="" alt="Your Transformed Face">
+                                <div class="frame-scanline"></div>
+                            </div>
+                            <div class="rotating-border border-outer"></div>
+                            <div class="rotating-border border-inner"></div>
+                        </div>
+                        
+                        <div class="alien-details">
+                            <h3 id="alien-name-display" class="neon-text">ALIEN FORM</h3>
+                            <div class="speech-bubble-container">
+                                <div class="speech-bubble">
+                                    <h4 id="user-hero-name">Hero Name</h4>
+                                    <p id="user-hero-bio">"Message goes here..."</p>
+                                </div>
+                                <div class="speech-bubble-tail"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="reset-btn" class="sci-fi-btn reset-btn">
+                        <span>TRY ANOTHER MUTATION</span>
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <p>© 7ama1 Industries | All rights reserved by no one | Powered by pure 7amaria energy</p>
+        </footer>
+    </div>
+
+    <!-- Floating siks container (will be filled by JS) -->
+    <div id="floating-emojis-container"></div>
+
+    <!-- Secret Hidden Screw Button in the bottom-right corner -->
+    <button id="secret-screw-btn" title="Don't touch this screw..."></button>
+
+    <!-- Secret Hee-Haw ASCII Art Modal -->
+    <div id="secret-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <span id="close-modal" class="close-btn">&times;</span>
+            <h2 class="comic-text neon-text-orange">🎵 HEE-HAW MOTHERBOARD ACTIVATE! 🎵</h2>
+            <pre id="ascii-art-display">Loading siks cybernetics...</pre>
+            <p class="comic-text text-gold">The digital siks sings the song of its people.</p>
+        </div>
+    </div>
+
+    <!-- Mutation Archives Panel Modal (Hidden by default) -->
+    <div id="archives-panel" class="modal-overlay hidden">
+        <div class="modal-content archives-modal-content">
+            <span id="close-archives" class="close-btn">&times;</span>
+            <h2 class="comic-text neon-text">🗄️ MUTATION ARCHIVES 🗄️</h2>
+            <p class="comic-text text-gold">List of previous sakasiik mutations cataloged in Tunisia</p>
+            
+            <div id="archives-grid" class="archives-grid">
+                <!-- Archive cards will be injected here by JS -->
+                <p class="comic-text text-empty">No mutations logged yet. Upload your mug, habibi!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Core file -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
