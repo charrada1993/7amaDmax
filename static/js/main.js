@@ -1,19 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- Intro Video Splash Screen ---
-// Firebase background image handling
-fetch('https://amadmax-72d24-default-rtdb.firebaseio.com/backgroundImage.json')
-  .then(r => r.json())
-  .then(data => {
-    const mql = window.matchMedia('(max-width: 768px)');
-    const setBg = () => {
-      const url = mql.matches ? data.mobile : data.desktop;
-      document.body.style.backgroundImage = `url('${url}')`;
-    };
-    mql.addEventListener('change', setBg);
-    setBg();
-  })
-  .catch(console.error);
-
     const introOverlay = document.getElementById('intro-overlay');
     const introBootScreen = document.getElementById('intro-boot-screen');
     const introVideoContainer = document.getElementById('intro-video-container');
@@ -69,8 +55,6 @@ fetch('https://amadmax-72d24-default-rtdb.firebaseio.com/backgroundImage.json')
 
     function animateStars() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#0a0a0f';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         currentWarpSpeed += (targetWarpSpeed - currentWarpSpeed) * 0.05;
 
