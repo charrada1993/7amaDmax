@@ -186,11 +186,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 3D Watch Mouse Tracker (Subtle Interactive Tilt) ---
     const watchContainer = document.getElementById('watch-container');
-    document.addEventListener('mousemove', (e) => {
-        const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-        const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+    
+    function updateTilt(x, y) {
+        const xAxis = (window.innerWidth / 2 - x) / 25;
+        const yAxis = (window.innerHeight / 2 - y) / 25;
         watchContainer.style.transform = `rotateX(${25 + yAxis}deg) rotateY(${-15 - xAxis}deg)`;
+    }
+
+    document.addEventListener('mousemove', (e) => {
+        updateTilt(e.pageX, e.pageY);
     });
+
+    // Touch support for mobile 3D tilt
+    document.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+            updateTilt(e.touches[0].pageX, e.touches[0].pageY);
+        }
+    }, { passive: true });
 
     // --- Mission of the Day Generator ---
     const missions = [

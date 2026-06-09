@@ -1614,9 +1614,17 @@ body::before {
         top: 35px;
         left: 35px;
     }
+    .watch-glass {
+        width: 170px;
+        height: 170px;
+        top: 30px;
+        left: 30px;
+    }
     .watch-cage {
-        width: 210px;
-        height: 210px;
+        width: 220px;
+        height: 220px;
+        top: 5px;
+        left: 5px;
     }
     .watch-hologram {
         font-size: 4.5rem;
@@ -1695,9 +1703,17 @@ body::before {
         top: 30px;
         left: 30px;
     }
+    .watch-glass {
+        width: 150px;
+        height: 150px;
+        top: 25px;
+        left: 25px;
+    }
     .watch-cage {
-        width: 180px;
-        height: 180px;
+        width: 190px;
+        height: 190px;
+        top: 5px;
+        left: 5px;
     }
     .watch-hologram {
         font-size: 3.8rem;
