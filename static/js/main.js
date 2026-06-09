@@ -12,12 +12,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Real-time listener for mutation updates
         historyRef.on('value', (snapshot) => {
+            console.log("Firebase data received:", snapshot.val());
             const data = snapshot.val();
             if (data) {
-                // Convert object to array and sort by timestamp
-                const records = Object.values(data).sort((a, b) => b.timestamp - a.timestamp);
+                // Firebase often returns an object of objects for 'history'
+                // We convert it to an array and sort by timestamp
+                const records = Object.keys(data).map(key => ({
+                    id: key,
+                    ...data[key]
+                })).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                
                 updateArchivesGrid(records);
+            } else {
+                updateArchivesGrid([]);
             }
+        }, (error) => {
+            console.error("Firebase Read Error:", error);
+            // Fallback to manual fetch if permission denied
+            fetch('/history')
+                .then(res => res.json())
+                .then(data => updateArchivesGrid(data))
+                .catch(console.error);
         });
     }
 
