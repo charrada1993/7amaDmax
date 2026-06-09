@@ -135,7 +135,7 @@ def upload_file():
             image_url = f"/static/uploads/{unique_name}"
 
         hero_name = request.form.get('hero_name', 'Unnamed Sidi').strip() or "Unnamed Sidi"
-        hero_bio  = request.form.get('hero_bio',  'No comment habibi').strip() or "No comment habibi"
+        hero_bio  = request.form.get('hero_bio',  'No comment ya saksouuk').strip() or "No comment ya saksouuk"
         alien_name = random.choice(ALIEN_NAMES)
 
         record = {
@@ -205,7 +205,7 @@ def delete_mutation():
     password = data.get('password')
 
     if password != "SIKS123":
-        return jsonify({'success': False, 'error': 'Incorrect password, habibi!'}), 403
+        return jsonify({'success': False, 'error': 'Incorrect password, ya saksouuk!'}), 403
 
     if not record_id:
         return jsonify({'success': False, 'error': 'Missing record ID'}), 400

@@ -240,8 +240,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- File input indicator ---
     const fileInput = document.getElementById('image-upload');
     const fileChosen = document.getElementById('file-chosen');
-    fileInput.addEventListener('change', function() {
-        fileChosen.textContent = this.files[0] ? this.files[0].name : "No file selected habibi";
+    imageUpload.addEventListener('change', function() {
+        fileChosen.textContent = this.files[0] ? this.files[0].name : "No file selected ya saksouuk";
     });
 
     // --- Transformation & Form Upload Logic ---
@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // Scroll to form and focus name
             document.getElementById('hero-name').focus();
-            alert("Fill in your Superhero details and upload your mug first, habibi! 📸");
+            alert("Fill in your Superhero details and upload your mug first, ya saksouuk! 📸");
         }
     });
 
@@ -376,8 +376,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Reset Form
     resetBtn.addEventListener('click', () => {
+        isTransforming = false;
+        transformationData = null;
         uploadForm.reset();
-        fileChosen.textContent = "No file selected habibi";
+        fileChosen.textContent = "No file selected ya saksouuk";
         uploadPanel.classList.remove('hidden');
         resultPanel.classList.add('hidden');
         timerDisplay.textContent = "READY";
@@ -463,7 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateArchivesGrid(data) {
         archivesGrid.innerHTML = '';
         if (!data || data.length === 0) {
-            archivesGrid.innerHTML = '<p class="comic-text text-empty">No mutations logged yet. Upload your mug, habibi! 📸</p>';
+            archivesGrid.innerHTML = '<p class="comic-text text-empty">No mutations logged yet. Upload your mug, ya saksouuk! 📸</p>';
             return;
         }
 
