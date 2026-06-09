@@ -22,7 +22,7 @@
         
         <!-- Video Container -->
         <div id="intro-video-container" class="hidden">
-            <video id="intro-video" src="{{ url_for('static', filename='vd/WhatsApp Video 2026-06-07 at 14.36.00.mp4') }}" playsinline></video>
+            <video id="intro-video" src="{{ url_for('static', filename='vd/intro.mp4') }}" poster="{{ url_for('static', filename='img/laptop.png') }}" playsinline></video>
             <button id="skip-intro-btn" class="sci-fi-btn skip-btn"><span>SKIP INTRO ⏩</span></button>
         </div>
     </div>
@@ -92,6 +92,9 @@
                             <!-- Neon scan line across the watch dial -->
                             <div class="dial-scanline"></div>
                         </div>
+
+                        <!-- Glass Cover -->
+                        <div class="watch-glass"></div>
 
                         <!-- Top Lid (Cage) floating/tilted slightly above -->
                         <div class="watch-cage">

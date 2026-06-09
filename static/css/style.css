@@ -64,9 +64,9 @@ body::before {
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: -2;
+    z-index: 1;
     pointer-events: none;
-    opacity: 0.65;
+    opacity: 0.8;
 }
 
 /* Splash Flash Overlay */
@@ -101,6 +101,8 @@ body::before {
     flex-direction: column;
     min-height: 100vh;
     justify-content: space-between;
+    position: relative;
+    z-index: 10;
 }
 
 /* --- Header Section --- */
@@ -159,13 +161,13 @@ body::before {
 }
 
 .panel-box {
-    background: rgba(8, 10, 16, 0.85);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 255, 65, 0.25);
+    background: rgba(8, 10, 16, 0.65);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 255, 65, 0.3);
     border-radius: 14px;
     padding: 22px;
     box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.8),
+        0 10px 30px rgba(0, 0, 0, 0.7),
         0 0 20px rgba(0, 255, 65, 0.1),
         inset 0 0 20px rgba(0, 255, 65, 0.05);
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -173,10 +175,10 @@ body::before {
     overflow: hidden;
     /* Tactical grid + scanning laser line */
     background-image: 
-        linear-gradient(rgba(0, 255, 65, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 255, 65, 0.02) 1px, transparent 1px),
-        linear-gradient(180deg, transparent, rgba(0, 255, 65, 0.08) 50%, transparent 100%);
-    background-size: 20px 20px, 20px 20px, 100% 200px;
+        linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+        linear-gradient(180deg, transparent, rgba(0, 255, 65, 0.1) 50%, transparent 100%);
+    background-size: 25px 25px, 25px 25px, 100% 200px;
     background-position: 0 0, 0 0, 0 -200px;
     background-repeat: repeat, repeat, no-repeat;
 }
@@ -384,73 +386,83 @@ body::before {
     height: 100%;
     border-radius: 50%;
     background: var(--metallic-dark);
-    border: 8px solid #0a0b0d;
+    border: 10px solid #11131a;
     box-shadow: 
-        inset 0 0 30px rgba(0, 0, 0, 0.95), 
-        0 15px 40px rgba(0, 0, 0, 0.9),
-        0 0 25px rgba(0, 255, 65, 0.2);
-    transform: translateZ(-30px);
+        inset 0 0 50px rgba(0, 0, 0, 0.9), 
+        0 20px 60px rgba(0, 0, 0, 0.9),
+        0 0 40px rgba(0, 255, 65, 0.15);
+    transform: translateZ(-40px);
 }
 
-/* Detailed Ports on the boite casing matching diagram */
-.boite-port {
+/* Side Crown / Button */
+.watch-boite::after {
+    content: '';
     position: absolute;
-    width: 35px;
-    height: 18px;
-    background: #000;
-    border: 2px solid rgba(0, 255, 65, 0.5);
-    box-shadow: 0 0 8px rgba(0, 255, 65, 0.4), inset 0 0 4px rgba(0, 255, 65, 0.8);
-    border-radius: 4px;
-}
-
-.port-left {
+    width: 25px;
+    height: 40px;
+    background: linear-gradient(to bottom, #2a2d39, #0e0f13, #2a2d39);
+    border: 2px solid #3e4256;
+    border-radius: 5px;
+    right: -15px;
     top: 50%;
-    left: -14px;
-    transform: translateY(-50%) rotate(90deg);
-}
-
-.port-right {
-    top: 50%;
-    right: -14px;
-    transform: translateY(-50%) rotate(90deg);
-}
-
-.port-back {
-    top: -14px;
-    left: 50%;
-    transform: translateX(-50%);
+    transform: translateY(-50%) rotateY(90deg);
+    box-shadow: -5px 0 15px rgba(0,0,0,0.5);
 }
 
 /* Red Pulsing Lock LED on Watch */
 .watch-boite::before {
     content: '';
     position: absolute;
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     background: #ff003c;
     border-radius: 50%;
-    top: 25px;
-    right: 25px;
-    box-shadow: 0 0 10px #ff003c;
+    top: 30px;
+    right: 50px;
+    box-shadow: 0 0 15px #ff003c;
     animation: led-blink 1s infinite alternate;
+    z-index: 10;
 }
 
 /* Watch Inner Core / Screen */
 .watch-core {
     position: absolute;
-    width: 196px;
-    height: 196px;
-    top: 37px;
-    left: 37px;
+    width: 200px;
+    height: 200px;
+    top: 35px;
+    left: 35px;
     border-radius: 50%;
-    background: radial-gradient(circle, #05240c 0%, #000 80%);
-    border: 5px solid var(--neon-green);
-    box-shadow: var(--glow-green-strong), inset 0 0 25px rgba(0, 255, 65, 0.4);
+    background: radial-gradient(circle, #0a3012 0%, #000 85%);
+    border: 4px solid var(--neon-green);
+    box-shadow: 
+        0 0 30px var(--neon-green-dim),
+        inset 0 0 40px rgba(0, 255, 65, 0.3);
     overflow: hidden;
-    transform: translateZ(5px);
+    transform: translateZ(10px);
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* Glass Cover Effect */
+.watch-glass {
+    position: absolute;
+    width: 210px;
+    height: 210px;
+    top: 30px;
+    left: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%, rgba(255, 255, 255, 0.05) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transform: translateZ(25px);
+    pointer-events: none;
+    z-index: 5;
+    animation: glass-shimmer 4s ease-in-out infinite alternate;
+}
+
+@keyframes glass-shimmer {
+    0% { background-position: -200% -200%; }
+    100% { background-position: 200% 200%; }
 }
 
 .watch-dial-gradient {
@@ -487,30 +499,47 @@ body::before {
     z-index: 3;
 }
 
-/* Watch Cage (Top Lid) */
+/* Watch Cage (Top Guard) */
 .watch-cage {
     position: absolute;
-    width: 250px;
-    height: 250px;
-    top: 10px;
-    left: 10px;
+    width: 260px;
+    height: 260px;
+    top: 5px;
+    left: 5px;
     border-radius: 50%;
-    border: 8px double rgba(0, 255, 65, 0.4);
+    border: 12px solid #1a1c23;
     background: transparent;
     pointer-events: none;
-    transform: translateZ(35px);
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.25);
+    transform: translateZ(45px);
+    box-shadow: 
+        0 0 25px rgba(0, 0, 0, 0.8),
+        inset 0 0 15px rgba(0, 255, 65, 0.1);
 }
 
 .cage-rim {
     position: absolute;
-    top: -6px;
-    left: -6px;
-    right: -6px;
-    bottom: -6px;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
     border-radius: 50%;
-    border: 4px solid #1a1c23;
+    border: 2px solid #333;
     box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+
+/* Mechanical Screws around the cage */
+.watch-cage::before {
+    content: '• • • •';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 2rem;
+    color: #444;
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.1);
+    transform: rotate(45deg);
 }
 
 .cage-slot {
@@ -519,9 +548,9 @@ body::before {
     height: 100%;
     border-radius: 50%;
     background: 
-        linear-gradient(90deg, transparent 45%, #2a2d39 45%, #2a2d39 55%, transparent 55%),
-        linear-gradient(0deg, transparent 45%, #2a2d39 45%, #2a2d39 55%, transparent 55%);
-    opacity: 0.9;
+        linear-gradient(90deg, transparent 48%, #111 48%, #111 52%, transparent 52%),
+        linear-gradient(0deg, transparent 48%, #111 48%, #111 52%, transparent 52%);
+    opacity: 0.6;
 }
 
 /* Explode and shake trigger class */
