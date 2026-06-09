@@ -13,10 +13,10 @@ app = Flask(__name__)
 
 # ─── Firebase Configuration ───────────────────────────────────────────────────
 # For Render, you can either:
-# 1. Set FIREBASE_SERVICE_ACCOUNT_JSON env var to the FULL JSON string
+# 1. Set FIREBASE_CREDS_JSON env var to the FULL JSON string (Matched from Render screenshot)
 # 2. Upload the firebase-service-account.json file
 service_account_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'firebase-service-account.json')
-service_account_json = os.environ.get('FIREBASE_SERVICE_ACCOUNT_JSON')
+service_account_json = os.environ.get('FIREBASE_CREDS_JSON')
 
 try:
     if service_account_json:

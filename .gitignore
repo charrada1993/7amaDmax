@@ -16,6 +16,9 @@ static/uploads/
 # Local database (history synced to Firebase)
 history.json
 
+# Firebase Secrets
+firebase-service-account.json
+
 # OS files
 .DS_Store
 Thumbs.db
