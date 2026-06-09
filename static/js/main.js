@@ -206,9 +206,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Mission of the Day Generator ---
     const missions = [
-        "Locate the lost Chankla of Sidi Bou Said to unlock ultimate siks flight.",
-        "Buy a baguette from the local Koucha without saying 'Habibi' or paying double.",
-        "Escort a herd of stubborn sakasiik through the chaotic streets of Tunis during rush hour.",
+        "O93od bahtha houcem manger m tath7ak.",
+        "Rod seif rajel.",
+        "5ali Malek maadch yakfer 24H.",
         "Defeat the evil Lord 3asbana in a legendary Harissa-eating contest.",
         "Hack the alien mainframe using only a dial-up connection from a Publinet in Sousse.",
         "Find a parking spot in downtown downtown Sfax on a market day without crying.",
