@@ -6,28 +6,42 @@ import uuid
 import requests
 from flask import Flask, render_template, request, jsonify
 from werkzeug.utils import secure_filename
+import firebase_admin
+from firebase_admin import credentials, db, storage
 
 app = Flask(__name__)
+
+# ─── Firebase Configuration ───────────────────────────────────────────────────
+# For Render, you can either:
+# 1. Set FIREBASE_SERVICE_ACCOUNT_JSON env var to the FULL JSON string
+# 2. Upload the firebase-service-account.json file
+service_account_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'firebase-service-account.json')
+service_account_json = os.environ.get('FIREBASE_SERVICE_ACCOUNT_JSON')
+
+try:
+    if service_account_json:
+        # Load from environment variable (preferred for Render)
+        cred_dict = json.loads(service_account_json)
+        cred = credentials.Certificate(cred_dict)
+    elif os.path.exists(service_account_path):
+        # Load from local file
+        cred = credentials.Certificate(service_account_path)
+    else:
+        cred = None
+        print("⚠️ Warning: Firebase service account not found. Using local fallback.")
+
+    if cred:
+        firebase_admin.initialize_app(cred, {
+            'databaseURL': os.environ.get('FIREBASE_DB_URL', 'https://amadmax-72d24-default-rtdb.firebaseio.com'),
+            'storageBucket': os.environ.get('FIREBASE_STORAGE_BUCKET', 'amadmax-72d24.appspot.com')
+        })
+except Exception as e:
+    print(f"❌ Firebase Initialization Error: {e}")
+    cred = None
 
 # ─── Configuration ────────────────────────────────────────────────────────────
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024   # 5 MB
-
-# Firebase Realtime Database base URL (from your project)
-FIREBASE_DB_URL = os.environ.get(
-    'FIREBASE_DB_URL',
-    'https://amadmax-72d24-default-rtdb.firebaseio.com'
-)
-
-# Firebase Storage bucket  (set this env var on Render)
-# Format: "<project-id>.appspot.com"  or your custom bucket name
-FIREBASE_STORAGE_BUCKET = os.environ.get(
-    'FIREBASE_STORAGE_BUCKET',
-    'amadmax-72d24.appspot.com'
-)
-
-# Firebase Web API Key  (set this env var on Render – found in Firebase console → Project Settings → General)
-FIREBASE_API_KEY = os.environ.get('FIREBASE_API_KEY', '')
 
 # ─── Local fallback upload folder (used when Firebase creds are missing) ──────
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'uploads')
@@ -55,31 +69,20 @@ def allowed_file(filename):
 
 def upload_to_firebase_storage(file_bytes, content_type, dest_filename):
     """
-    Upload raw bytes to Firebase Storage using the REST API.
+    Upload raw bytes to Firebase Storage using firebase-admin.
     Returns the public download URL or None on failure.
     """
-    if not FIREBASE_API_KEY:
+    if not cred:
         return None
 
-    url = (
-        f"https://firebasestorage.googleapis.com/v0/b/"
-        f"{FIREBASE_STORAGE_BUCKET}/o?"
-        f"uploadType=media&name=uploads%2F{dest_filename}"
-    )
-    headers = {
-        'Content-Type': content_type,
-        'X-Firebase-API-Key': FIREBASE_API_KEY,
-    }
     try:
-        resp = requests.post(url, data=file_bytes, headers=headers, timeout=30)
-        resp.raise_for_status()
-        token = resp.json().get('downloadTokens', '')
-        public_url = (
-            f"https://firebasestorage.googleapis.com/v0/b/"
-            f"{FIREBASE_STORAGE_BUCKET}/o/uploads%2F{dest_filename}"
-            f"?alt=media&token={token}"
-        )
-        return public_url
+        bucket = storage.bucket()
+        blob = bucket.blob(f"uploads/{dest_filename}")
+        blob.upload_from_string(file_bytes, content_type=content_type)
+        
+        # Make the blob public and get the URL
+        blob.make_public()
+        return blob.public_url
     except Exception as e:
         app.logger.error(f"Firebase Storage upload error: {e}")
         return None
@@ -87,10 +90,11 @@ def upload_to_firebase_storage(file_bytes, content_type, dest_filename):
 
 def save_record_to_firebase(record):
     """Push a mutation record to the Firebase Realtime Database."""
+    if not cred:
+        return
     try:
-        url = f"{FIREBASE_DB_URL}/history.json"
-        resp = requests.post(url, json=record, timeout=10)
-        resp.raise_for_status()
+        ref = db.reference('history')
+        ref.push(record)
     except Exception as e:
         app.logger.error(f"Firebase DB write error: {e}")
 

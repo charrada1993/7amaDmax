@@ -1,4 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Firebase Real-time Listener ---
+    const firebaseConfig = {
+        databaseURL: "https://amadmax-72d24-default-rtdb.firebaseio.com"
+    };
+    
+    // Initialize Firebase
+    if (typeof firebase !== 'undefined') {
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const historyRef = database.ref('history');
+
+        // Real-time listener for mutation updates
+        historyRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                // Convert object to array and sort by timestamp
+                const records = Object.values(data).sort((a, b) => b.timestamp - a.timestamp);
+                updateArchivesGrid(records);
+            }
+        });
+    }
+
     // --- Intro Video Splash Screen ---
     const introOverlay = document.getElementById('intro-overlay');
     const introBootScreen = document.getElementById('intro-boot-screen');
@@ -411,68 +433,70 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeArchives = document.getElementById('close-archives');
     const archivesGrid = document.getElementById('archives-grid');
 
+    function updateArchivesGrid(data) {
+        archivesGrid.innerHTML = '';
+        if (!data || data.length === 0) {
+            archivesGrid.innerHTML = '<p class="comic-text text-empty">No mutations logged yet. Upload your mug, habibi! 📸</p>';
+            return;
+        }
+
+        data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'archive-card';
+
+            // Ensure safe escaping
+            const escapedHero = escapeHTML(item.hero_name);
+            const escapedBio = escapeHTML(item.hero_bio);
+            const escapedAlien = escapeHTML(item.alien_name);
+
+            const timeString = new Date(item.timestamp * 1000).toLocaleDateString(undefined, {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Use image_url if available, otherwise fallback to local uploads
+            const displayImgUrl = item.image_url || `/static/uploads/${item.filename}`;
+            
+            card.innerHTML = `
+                <div class="archive-card-header">
+                    <span class="archive-card-status">MUTANT DETECTED</span>
+                    <span class="archive-card-date">${timeString}</span>
+                </div>
+                <div class="archive-img-container">
+                    <img class="archive-img" src="${displayImgUrl}" alt="${escapedAlien}">
+                    <div class="archive-card-border-outer"></div>
+                    <div class="archive-card-scanline"></div>
+                </div>
+                <div class="archive-card-body">
+                    <div class="archive-card-title">${escapedAlien}</div>
+                    <div class="archive-card-meta">
+                        <span class="meta-label">HERO:</span> 
+                        <span class="meta-value">${escapedHero}</span>
+                    </div>
+                    <div class="archive-card-bio-title">MUTATION READOUT</div>
+                    <div class="archive-card-bio">"${escapedBio}"</div>
+                </div>
+            `;
+            archivesGrid.appendChild(card);
+        });
+    }
+
     viewArchivesBtn.addEventListener('click', () => {
         archivesPanel.classList.remove('hidden');
-        archivesGrid.innerHTML = '<p class="comic-text text-gold" style="grid-column: 1/-1; text-align: center; font-size: 1.2rem;">📡 Contacting Tunisia Satellite logs...</p>';
-
-        fetch('/history')
-            .then(res => {
-                if (!res.ok) throw new Error("Could not retrieve logs");
-                return res.json();
-            })
-            .then(data => {
-                archivesGrid.innerHTML = '';
-                if (data.length === 0) {
-                    archivesGrid.innerHTML = '<p class="comic-text text-empty">No mutations logged yet. Upload your mug, habibi! 📸</p>';
-                    return;
-                }
-
-                data.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'archive-card';
-
-                    // Ensure safe escaping
-                    const escapedHero = escapeHTML(item.hero_name);
-                    const escapedBio = escapeHTML(item.hero_bio);
-                    const escapedAlien = escapeHTML(item.alien_name);
-
-                    const timeString = new Date(item.timestamp * 1000).toLocaleDateString(undefined, {
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                    
-                    // Use image_url if available, otherwise fallback to local uploads
-                    const displayImgUrl = item.image_url || `/static/uploads/${item.filename}`;
-                    
-                    card.innerHTML = `
-                        <div class="archive-card-header">
-                            <span class="archive-card-status">MUTANT DETECTED</span>
-                            <span class="archive-card-date">${timeString}</span>
-                        </div>
-                        <div class="archive-img-container">
-                            <img class="archive-img" src="${displayImgUrl}" alt="${escapedAlien}">
-                            <div class="archive-card-border-outer"></div>
-                            <div class="archive-card-scanline"></div>
-                        </div>
-                        <div class="archive-card-body">
-                            <div class="archive-card-title">${escapedAlien}</div>
-                            <div class="archive-card-meta">
-                                <span class="meta-label">HERO:</span> 
-                                <span class="meta-value">${escapedHero}</span>
-                            </div>
-                            <div class="archive-card-bio-title">MUTATION READOUT</div>
-                            <div class="archive-card-bio">"${escapedBio}"</div>
-                        </div>
-                    `;
-                    archivesGrid.appendChild(card);
+        
+        // If firebase listener is not active, do a manual fetch
+        if (typeof firebase === 'undefined') {
+            archivesGrid.innerHTML = '<p class="comic-text text-gold" style="grid-column: 1/-1; text-align: center; font-size: 1.2rem;">📡 Contacting Tunisia Satellite logs...</p>';
+            fetch('/history')
+                .then(res => res.json())
+                .then(data => updateArchivesGrid(data))
+                .catch(err => {
+                    console.error(err);
+                    archivesGrid.innerHTML = `<p class="comic-text text-empty">Failed to scan database: ${err.message}</p>`;
                 });
-            })
-            .catch(err => {
-                console.error(err);
-                archivesGrid.innerHTML = `<p class="comic-text text-empty">Failed to scan database: ${err.message}</p>`;
-            });
+        }
     });
 
     closeArchives.addEventListener('click', () => {
