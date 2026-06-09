@@ -442,13 +442,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         hour: '2-digit',
                         minute: '2-digit'
                     });
+                    
+                    // Use image_url if available, otherwise fallback to local uploads
+                    const displayImgUrl = item.image_url || `/static/uploads/${item.filename}`;
+                    
                     card.innerHTML = `
                         <div class="archive-card-header">
                             <span class="archive-card-status">MUTANT DETECTED</span>
                             <span class="archive-card-date">${timeString}</span>
                         </div>
                         <div class="archive-img-container">
-                            <img class="archive-img" src="/static/uploads/${item.filename}" alt="${escapedAlien}">
+                            <img class="archive-img" src="${displayImgUrl}" alt="${escapedAlien}">
                             <div class="archive-card-border-outer"></div>
                             <div class="archive-card-scanline"></div>
                         </div>
