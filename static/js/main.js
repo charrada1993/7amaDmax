@@ -492,8 +492,49 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="archive-card-bio-title">MUTATION READOUT</div>
                     <div class="archive-card-bio">"${escapedBio}"</div>
+                    
+                    <div class="archive-card-actions">
+                        <a href="${displayImgUrl}" download="mutation-${item.timestamp}.jpg" class="action-btn download-btn" title="Download Image">
+                            <span>📥</span>
+                        </a>
+                        <button class="action-btn delete-btn" data-id="${item.id || ''}" title="Delete Record">
+                            <span>🗑️</span>
+                        </button>
+                    </div>
                 </div>
             `;
+
+            // Add delete functionality
+            const delBtn = card.querySelector('.delete-btn');
+            delBtn.addEventListener('click', () => {
+                const id = delBtn.getAttribute('data-id');
+                const pass = prompt("Enter SIKS Password to delete this mutant:");
+                
+                if (pass === null) return; // User cancelled
+                
+                if (pass === "SIKS123") {
+                    fetch('/delete-mutation', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: id, password: pass })
+                    })
+                    .then(res => res.json())
+                    .then(resData => {
+                        if (resData.success) {
+                            alert("Mutant vaporized! 💥");
+                            // Card will be removed automatically by real-time listener if active
+                            // If not, we remove it manually
+                            if (typeof firebase === 'undefined') card.remove();
+                        } else {
+                            alert("Error: " + resData.error);
+                        }
+                    })
+                    .catch(err => alert("Vaporization failed: " + err));
+                } else {
+                    alert("WRONG PASSWORD! The siks is disappointed in you. 🫏");
+                }
+            });
+
             archivesGrid.appendChild(card);
         });
     }

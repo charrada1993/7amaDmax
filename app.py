@@ -180,25 +180,49 @@ def get_history():
     """Return mutation history — try Firebase first, fall back to local JSON."""
     records = []
     try:
-        url = f"{FIREBASE_DB_URL}/history.json"
-        resp = requests.get(url, timeout=10)
-        resp.raise_for_status()
-        data = resp.json()
-        if isinstance(data, dict):
-            records = list(data.values())
-        elif isinstance(data, list):
-            records = [r for r in data if r]
-    except Exception as e:
-        app.logger.warning(f"Firebase history fetch failed, using local: {e}")
-        if os.path.exists(DB_FILE):
-            try:
+        if cred:
+            ref = db.reference('history')
+            data = ref.get()
+            if data:
+                # Add the Firebase ID to each record
+                records = [{**v, 'id': k} for k, v in data.items() if v]
+        else:
+            # Local fallback if Firebase not initialized
+            if os.path.exists(DB_FILE):
                 with open(DB_FILE, 'r', encoding='utf-8') as f:
                     records = json.load(f)
-            except Exception:
-                pass
+    except Exception as e:
+        app.logger.warning(f"History fetch error: {e}")
 
     records.sort(key=lambda x: x.get('timestamp', 0), reverse=True)
     return jsonify(records)
+
+
+@app.route('/delete-mutation', methods=['POST'])
+def delete_mutation():
+    data = request.json
+    record_id = data.get('id')
+    password = data.get('password')
+
+    if password != "SIKS123":
+        return jsonify({'success': False, 'error': 'Incorrect password, habibi!'}), 403
+
+    if not record_id:
+        return jsonify({'success': False, 'error': 'Missing record ID'}), 400
+
+    try:
+        # Delete from Firebase Realtime DB
+        if cred:
+            ref = db.reference(f'history/{record_id}')
+            ref.delete()
+        
+        # Also handle local fallback if necessary (optional for production)
+        # For simplicity, we primarily rely on Firebase in production
+        
+        return jsonify({'success': True})
+    except Exception as e:
+        app.logger.error(f"Delete error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 
 @app.errorhandler(413)

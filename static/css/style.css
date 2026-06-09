@@ -1289,6 +1289,58 @@ body::before {
     max-height: 80px;
     overflow-y: auto;
     font-family: sans-serif;
+    margin-bottom: 15px;
+}
+
+.archive-card-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.action-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+.download-btn:hover {
+    background: rgba(0, 255, 65, 0.15);
+    border-color: var(--neon-green);
+    box-shadow: 0 0 10px var(--neon-green-dim);
+    transform: translateY(-2px);
+}
+
+.delete-btn:hover {
+    background: rgba(255, 0, 60, 0.15);
+    border-color: #ff003c;
+    box-shadow: 0 0 10px rgba(255, 0, 60, 0.3);
+    transform: translateY(-2px);
+}
+
+.action-btn span {
+    filter: grayscale(1) brightness(2);
+}
+
+.download-btn:hover span {
+    filter: none;
+}
+
+.delete-btn:hover span {
+    filter: none;
 }
 
 .text-empty {
