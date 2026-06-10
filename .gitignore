@@ -18,6 +18,7 @@ history.json
 
 # Firebase Secrets
 firebase-service-account.json
+FIREBASE_CREDS_JSON.json
 
 # OS files
 .DS_Store

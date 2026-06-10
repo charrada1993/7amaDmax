@@ -16,6 +16,8 @@ app = Flask(__name__)
 # 1. Set FIREBASE_CREDS_JSON env var to the FULL JSON string (Matched from Render screenshot)
 # 2. Upload the firebase-service-account.json file
 service_account_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'firebase-service-account.json')
+# Also check for the specific file name you created
+alt_service_account_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'FIREBASE_CREDS_JSON.json')
 service_account_json = os.environ.get('FIREBASE_CREDS_JSON')
 
 try:
@@ -26,6 +28,9 @@ try:
     elif os.path.exists(service_account_path):
         # Load from local file
         cred = credentials.Certificate(service_account_path)
+    elif os.path.exists(alt_service_account_path):
+        # Load from the alternate local file name
+        cred = credentials.Certificate(alt_service_account_path)
     else:
         cred = None
         print("⚠️ Warning: Firebase service account not found. Using local fallback.")
