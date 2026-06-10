@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- File input indicator ---
     const fileInput = document.getElementById('image-upload');
     const fileChosen = document.getElementById('file-chosen');
-    imageUpload.addEventListener('change', function() {
+    fileInput.addEventListener('change', function() {
         fileChosen.textContent = this.files[0] ? this.files[0].name : "No file selected ya saksouuk";
     });
 
