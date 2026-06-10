@@ -209,11 +209,16 @@ document.addEventListener('DOMContentLoaded', () => {
         "O93od bahtha houcem manger m tath7ak.",
         "Rod seif rajel.",
         "5ali Malek maadch yakfer 24H.",
-        "Defeat the evil Lord 3asbana in a legendary Harissa-eating contest.",
-        "Hack the alien mainframe using only a dial-up connection from a Publinet in Sousse.",
-        "Find a parking spot in downtown downtown Sfax on a market day without crying.",
-        "Negotiate a lower price for a carpet in the Kairouan medina without getting offered tea.",
-        "Survive a trip in a Tunisian yellow taxi without the driver talking about politics."
+        "O5rej maa anas manger retard",
+        "Al3ab rami maa yassin manger m yaser9ek",
+        "24H manger do5aan",
+        "3oum fyl 9erween",
+        "Asm3 el ghnee watha7 f karhabt Malek",
+        "Amel kourda",
+        "7ajem bl bhy and la7chaychy",
+        "o93rf m3a emen me8ir m ynarevzek",
+        "Koul haja kodem bilel manger m tatyh",
+        "O9no3 mednini elli mednin taba tounes mch libia"
     ];
     const missionText = document.getElementById('mission-text');
     missionText.textContent = missions[Math.floor(Math.random() * missions.length)];
