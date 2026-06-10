@@ -184,8 +184,10 @@ def get_history():
             ref = db.reference('history')
             data = ref.get()
             if data:
-                # Add the Firebase ID to each record
-                records = [{**v, 'id': k} for k, v in data.items() if v]
+                if isinstance(data, dict):
+                    records = [{**v, 'id': k} for k, v in data.items() if v]
+                elif isinstance(data, list):
+                    records = [{**v, 'id': i} for i, v in enumerate(data) if v]
         else:
             # Local fallback if Firebase not initialized
             if os.path.exists(DB_FILE):
@@ -194,6 +196,7 @@ def get_history():
     except Exception as e:
         app.logger.warning(f"History fetch error: {e}")
 
+    # Ensure each record has a timestamp for sorting
     records.sort(key=lambda x: x.get('timestamp', 0), reverse=True)
     return jsonify(records)
 

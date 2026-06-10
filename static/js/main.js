@@ -556,9 +556,11 @@ document.addEventListener('DOMContentLoaded', () => {
     viewArchivesBtn.addEventListener('click', () => {
         archivesPanel.classList.remove('hidden');
         
-        // If firebase listener is not active, do a manual fetch
-        if (typeof firebase === 'undefined') {
+        // Show loading state if grid is currently empty
+        if (archivesGrid.children.length === 0 || archivesGrid.querySelector('.text-empty')) {
             archivesGrid.innerHTML = '<p class="comic-text text-gold" style="grid-column: 1/-1; text-align: center; font-size: 1.2rem;">📡 Contacting Tunisia Satellite logs...</p>';
+            
+            // Manual fetch as a backup/initial load
             fetch('/history')
                 .then(res => res.json())
                 .then(data => updateArchivesGrid(data))
